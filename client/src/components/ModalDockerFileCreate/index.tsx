@@ -10,15 +10,12 @@ import Modal from '../Modal';
 import Input from '../Input';
 import AsyncSelect from '../AsyncSelect';
 
+// Services
+import api from '../../services/api';
+
 // Styles
 import { Container, FormArea } from './styles';
-
-export interface DockerfileEntity {
-  id: number;
-  imageName: string;
-  filename: string;
-  type: string;
-}
+import { Image } from '../ModalImage';
 
 interface LanguageValue {
   label: string;
@@ -30,38 +27,22 @@ const ModalDockerFileCreate: React.FC<IModalProps> = ({ isOpen, setIsOpen }) => 
   const [languages, setLanguages] = useState<LanguageValue[]>([] as LanguageValue[]);
 
   useEffect(() => {
-    setLanguages(
-      [
-        {
-          label: 'Java',
-          value: 'JAVA'
-        },
-        {
-          label: 'Mongo',
-          value: 'Mongo'
-        },
-        {
-          label: 'Javascript',
-          value: 'JAVASCRIPT'
-        },
-        {
-          label: 'React',
-          value: 'react'
-        }
-      ]
-    );
+    api.get('/types').then(response => {
+      console.log(response.data)
+      setLanguages(response.data);
+    });
   }, []);
 
   const handleSubmit = useCallback(
-    async (data: DockerfileEntity) => {
+    async (data: Image) => {
       console.log(data)
       try {
         const schema = Yup.object().shape({
-          imageName: Yup.string()
+          name: Yup.string()
             .min(3, 'Field should contains at least 3 caracters.')
             .max(50, 'Field is more than 50 caracters.')
             .required('Field is required.'),
-          filename: Yup.string()
+          fileName: Yup.string()
             .min(3, 'Field should contains at least 3 caracters.')
             .max(50, 'Field is more than 50 caracters.')
             .required('Field is required.'),
@@ -86,8 +67,11 @@ const ModalDockerFileCreate: React.FC<IModalProps> = ({ isOpen, setIsOpen }) => 
 
       formRef.current?.setErrors({});
 
-      // API INTEGRATION HERE
-      // ...
+      api.post('/image', data).then(response => {
+        console.log(response)
+        formRef.current?.reset();
+        setIsOpen();
+      });
     },
     [],
   );
@@ -111,9 +95,9 @@ const ModalDockerFileCreate: React.FC<IModalProps> = ({ isOpen, setIsOpen }) => 
         <p>Fill the fields below in order to create your Dockerfile..</p>
         <FormArea ref={formRef} onSubmit={handleSubmit}>
           <h3>Image name</h3>
-          <Input name="imageName" />
+          <Input name="name" />
           <h3>Dockerfile name</h3>
-          <Input name="filename" />
+          <Input name="fileName" />
           <h3>Language</h3>
           <AsyncSelect className="async-select" name="type" defaultOptions={languages} noOptionsMessage={() => 'Type the language'} loadOptions={loadOptions} />
           <button>

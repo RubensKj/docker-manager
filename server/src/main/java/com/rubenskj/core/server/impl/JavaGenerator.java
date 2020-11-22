@@ -2,7 +2,7 @@ package com.rubenskj.core.server.impl;
 
 import com.rubenskj.core.server.constants.Type;
 import com.rubenskj.core.server.model.Image;
-import com.rubenskj.core.server.service.DockerfileService;
+import com.rubenskj.core.server.service.DockerFileService;
 import com.rubenskj.core.server.util.FileUtil;
 
 import java.util.ArrayList;
@@ -11,9 +11,9 @@ import java.util.List;
 
 public class JavaGenerator extends TemplateContentGenerator {
 
-    private final DockerfileService dockerfileService;
+    private final DockerFileService dockerfileService;
 
-    public JavaGenerator(TemplateContentGenerator iContentGenerator, DockerfileService dockerfileService) {
+    public JavaGenerator(TemplateContentGenerator iContentGenerator, DockerFileService dockerfileService) {
         super(iContentGenerator, Type.JAVA);
         this.dockerfileService = dockerfileService;
     }
@@ -37,7 +37,7 @@ public class JavaGenerator extends TemplateContentGenerator {
                         "FROM openjdk:latest",
                         "MAINTAINER AUTHOR_NAME",
                         "COPY . /var/www/APPLICATION_FILE.yml",
-                        "COPY . /var/www/JAR_NAME.jar",
+                        "COPY ./target/*.jar /var/www/JAR_NAME.jar",
                         "WORKDIR /var/www/",
                         "EXPOSE 8080",
                         "ENTRYPOINT java -jar JAR_NAME.jar"
@@ -49,14 +49,14 @@ public class JavaGenerator extends TemplateContentGenerator {
     public List<String> getDockerComposeLines() {
         return new ArrayList<>(
                 Arrays.asList(
-                        "SERVICE_NAME:",
-                        FileUtil.TABULATION + "build:",
-                        FileUtil.TABULATION  + FileUtil.TABULATION  + "dockerfile: ./FILE_NAME",
-                        FileUtil.TABULATION  + FileUtil.TABULATION  + "context: .",
-                        FileUtil.TABULATION  + "image: IMAGE_NAME",
-                        FileUtil.TABULATION  + "container_name: IMAGE_NAME_container",
-                        FileUtil.TABULATION  + "ports:",
-                        FileUtil.TABULATION + FileUtil.TABULATION  + "- \"8080:8080\""
+                        FileUtil.TABULATION + "SERVICE_NAME:",
+                        FileUtil.DOUBLE_TABULATION + "build:",
+                        FileUtil.TRI_TABULATION  + "dockerfile: ./FILE_NAME",
+                        FileUtil.TRI_TABULATION  + "context: .",
+                        FileUtil.DOUBLE_TABULATION  + "image: IMAGE_NAME",
+                        FileUtil.DOUBLE_TABULATION  + "container_name: SERVICE_NAME-1",
+                        FileUtil.DOUBLE_TABULATION  + "ports:",
+                        FileUtil.TRI_TABULATION + "- \"8080:8080\""
                 )
         );
     }

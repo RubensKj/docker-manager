@@ -10,6 +10,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 @Service
 public class ImageService {
@@ -51,5 +53,10 @@ public class ImageService {
 
     public Image findById(String id) throws NotFoundException {
         return this.iImageRepository.findById(id).orElseThrow(() -> new NotFoundException("Cannot find any Image with this id. Id: " + id));
+    }
+
+    public List<Image> findAllById(List<String> images) {
+        return StreamSupport.stream(this.iImageRepository.findAllById(images).spliterator(), false)
+                .collect(Collectors.toList());
     }
 }

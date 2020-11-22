@@ -5,7 +5,7 @@ public enum Type {
     REACT("React"),
     MONGO("Mongo"),
     UBUNTU("Ubuntu"),
-    ;
+    NODE("Node");
 
     private String label;
 

@@ -11,9 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class DockerfileService {
+public class DockerFileService {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(DockerfileService.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(DockerFileService.class);
 
     public List<String> createDockerFile(Image image, Type type, List<String> defaultLinesDocker) {
         List<String> dockerFileLines = new ArrayList<>();

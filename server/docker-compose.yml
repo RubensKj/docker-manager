@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  Dockerfile:
+    build:
+      dockerfile: ./Dockerfile
+      context: .
+    image: rubenskj/server
+    container_name: Dockerfile-1
+    ports:
+      - "8080:8080"
+networks:
+  production-network:
+    driver: bridge"

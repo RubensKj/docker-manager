@@ -4,19 +4,22 @@ import { FormHandles } from '@unform/core';
 
 // Interfaces
 import { IModalProps } from '../ModalInterface';
-import { DockerfileEntity } from '../ModalDockerFileCreate';
+import { Image } from '../ModalImage';
 
 // Components
 import Modal from '../Modal';
 import Input from '../Input';
 import AsyncSelect from '../AsyncSelect';
 
+// Services
+import api from '../../services/api';
+
 // Styles
 import { Container, FormArea } from './styles';
 
 interface DockerImagesCompose {
-  filename: string;
-  images: DockerfileEntity[];
+  fileName: string;
+  images: Image[];
 }
 
 interface Options {
@@ -29,35 +32,14 @@ const ModalDockerComposeCreate: React.FC<IModalProps> = ({ isOpen, setIsOpen }) 
   const [options, setOptions] = useState<Options[]>([] as Options[]);
 
   useEffect(() => {
-    const response = [
-      {
-        id: 1,
-        name: 'emissao-rda.dockerfile',
-        type: 'JAVA'
-      },
-      {
-        id: 2,
-        name: 'node.dockerfile',
-        type: 'Node'
-      },
-      {
-        id: 3,
-        name: 'eureka-rda.dockerfile',
-        type: 'JAVA'
-      },
-      {
-        id: 4,
-        name: 'recebimento-rda.dockerfile',
-        type: 'JAVA'
-      }
-    ]
-
-    setOptions(response.map(image => (
-      {
-        value: image.id,
-        label: image.name
-      }
-    )));
+    api.get('/image').then(response => {
+      setOptions(response.data.map(image => (
+        {
+          value: image.id,
+          label: image.name
+        }
+      )));
+    });
   }, []);
 
   const handleSubmit = useCallback(
@@ -65,7 +47,7 @@ const ModalDockerComposeCreate: React.FC<IModalProps> = ({ isOpen, setIsOpen }) 
       console.log(data)
       try {
         const schema = Yup.object().shape({
-          filename: Yup.string()
+          fileName: Yup.string()
             .min(3, 'Field should contains at least 3 caracters.')
             .max(50, 'Field is more than 50 caracters.')
             .required('Field is required.'),
@@ -92,8 +74,9 @@ const ModalDockerComposeCreate: React.FC<IModalProps> = ({ isOpen, setIsOpen }) 
 
       formRef.current?.setErrors({});
 
-      // API INTEGRATION HERE
-      // ...
+      api.post('/compose', data).then(response => {
+        console.log(response)
+      });
     },
     [],
   );
@@ -117,7 +100,7 @@ const ModalDockerComposeCreate: React.FC<IModalProps> = ({ isOpen, setIsOpen }) 
         <p>Select some images to build the yml (The select will be the order)</p>
         <FormArea ref={formRef} onSubmit={handleSubmit}>
           <h3>Docker compose file name</h3>
-          <Input name="filename" />
+          <Input name="fileName" />
           <h3>Images</h3>
           <AsyncSelect className="async-select" name="images" isMulti={true} defaultOptions={options} noOptionsMessage={() => 'Type the image name'} loadOptions={loadOptions} />
           <button>
