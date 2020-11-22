@@ -7,6 +7,7 @@ import com.rubenskj.core.server.repository.IContentGenerator;
 import com.rubenskj.core.server.repository.IImageRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -22,7 +23,7 @@ public class ImageService {
     private final FileService fileService;
     private final IContentGenerator iContentGenerator;
 
-    public ImageService(IImageRepository iImageRepository, FileService fileService, IContentGenerator iContentGenerator) {
+    public ImageService(IImageRepository iImageRepository, FileService fileService, @Qualifier("javaGenerator") IContentGenerator iContentGenerator) {
         this.iImageRepository = iImageRepository;
         this.fileService = fileService;
         this.iContentGenerator = iContentGenerator;
@@ -31,7 +32,11 @@ public class ImageService {
     public Image create(ImageDTO imageDTO) {
         Image image = this.createImageByDTO(imageDTO);
 
-        iContentGenerator.generate(image);
+        try {
+            this.iContentGenerator.generate(image);
+        } catch (Exception e) {
+            LOGGER.error("Error during the generation of DockerFiles... e ->", e);
+        }
 
         return this.iImageRepository.save(image);
     }

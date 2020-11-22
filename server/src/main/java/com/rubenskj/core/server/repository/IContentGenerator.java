@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component;
 @Component
 public interface IContentGenerator {
 
-    void generate(Image image);
+    void generate(Image image) throws Exception;
 }

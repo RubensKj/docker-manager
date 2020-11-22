@@ -1,4 +1,4 @@
-import React, { useState, createContext, useContext } from 'react';
+import React, { useState, createContext, useContext, useCallback } from 'react';
 
 // Components
 import ModalDockerFileCreate from '../../components/ModalDockerFileCreate';
@@ -13,9 +13,9 @@ const ModalContext = createContext<IModalContext>({} as IModalContext);
 export const ModalProvider: React.FC = ({ children }) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
-  function toggleModal() {
+  const toggleModal = useCallback(() => {
     setIsOpen(!isOpen);
-  }
+  }, [isOpen]);
 
   return (
     <ModalContext.Provider value={{toggleModal, isOpen}}>

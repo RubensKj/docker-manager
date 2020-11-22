@@ -43,7 +43,11 @@ const ModalImage: React.FC<IModalImageProps> = ({ isOpen, setIsOpen, image }) =>
         <h4>Image type: {image.type}</h4>
         <p>{image.fileName}</p>
         <LineSeparator />
-        <Content ref={ref} defaultValue={image.contentDockerFile}></Content>
+        {image.contentDockerFile ? (
+          <Content ref={ref} defaultValue={image.contentDockerFile}></Content>
+        ) : (
+            <Content ref={ref} defaultValue={image.contentDockerCompose}></Content>
+          )}
         <button onClick={copyToClipBoard}>Copy to the clipboard</button>
       </Container>
     </Modal>

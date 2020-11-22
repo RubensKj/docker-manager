@@ -23,6 +23,10 @@ public class DockerComposeService {
     }
 
     public String createDockerFile(ComposeDTO composeDTO) {
+        LOGGER.info("Creating docker-compose file");
+        LOGGER.debug("ComposeDTO: {}", composeDTO);
+
+        LOGGER.info("Pulling all images..");
         List<Image> images = this.imageService.findAllById(composeDTO.getImages());
 
         List<String> initialLines = getInitialLines();

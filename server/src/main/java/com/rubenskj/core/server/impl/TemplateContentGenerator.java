@@ -21,7 +21,7 @@ public abstract class TemplateContentGenerator implements IContentGenerator {
     }
 
     @Override
-    public final void generate(Image image) {
+    public final void generate(Image image) throws Exception {
         if (this.type.equals(image.getType())) {
             execute(image);
         }
@@ -31,11 +31,11 @@ public abstract class TemplateContentGenerator implements IContentGenerator {
         }
     }
 
-    abstract void execute(Image image);
+    abstract void execute(Image image) throws Exception;
 
-    public abstract List<String> getDockerFileLines();
+    public abstract List<String> getDockerFileLines() throws Exception;
 
-    public abstract List<String> getDockerComposeLines();
+    public abstract List<String> getDockerComposeLines() throws Exception;
 
     public Type getType() {
         return type;

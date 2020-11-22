@@ -72,8 +72,7 @@ const ModalDockerFileCreate: React.FC<IModalProps> = ({ isOpen, setIsOpen }) => 
         formRef.current?.reset();
         setIsOpen();
       });
-    },
-    [],
+    }, [setIsOpen]
   );
 
   const filterColors = (inputValue: string) => {

@@ -1,11 +1,16 @@
 version: '3.8'
 services:
-  Dockerfile:
+  mongo:
+    image: mongo
+    container_name: mongo-1
+    ports:
+      - "27017:27017"
+  server:
     build:
-      dockerfile: ./Dockerfile
+      dockerfile: ./server.dockerfile
       context: .
     image: rubenskj/server
-    container_name: Dockerfile-1
+    container_name: server-1
     ports:
       - "8080:8080"
 networks:

@@ -11,40 +11,27 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class JavaGenerator extends TemplateContentGenerator {
+public class MongoGenerator extends TemplateContentGenerator {
 
     private final DockerFileService dockerfileService;
 
-    public JavaGenerator(TemplateContentGenerator iContentGenerator, DockerFileService dockerfileService) {
-        super(iContentGenerator, Type.JAVA);
+    public MongoGenerator(DockerFileService dockerfileService) {
+        super(Type.MONGO);
         this.dockerfileService = dockerfileService;
     }
 
     @Override
     void execute(Image image) throws Exception {
-        List<String> defaultLinesDocker = getDockerFileLines();
         List<String> defaultComposeLines = getDockerComposeLines();
 
-        List<String> dockerFileLines = this.dockerfileService.createDockerFile(image, image.getType(), defaultLinesDocker);
         List<String> dockerComposeLines = this.dockerfileService.createDockerComposeFromImage(image, image.getType(), defaultComposeLines);
 
-        image.setContentDockerFile(String.join("\n", dockerFileLines));
         image.setContentDockerCompose(String.join("\n", dockerComposeLines));
     }
 
     @Override
-    public List<String> getDockerFileLines() {
-        return new ArrayList<>(
-                Arrays.asList(
-                        "FROM openjdk:latest",
-                        "MAINTAINER AUTHOR_NAME",
-                        "COPY . /var/www/APPLICATION_FILE.yml",
-                        "COPY ./target/*.jar /var/www/JAR_NAME.jar",
-                        "WORKDIR /var/www/",
-                        "EXPOSE 8080",
-                        "ENTRYPOINT java -jar JAR_NAME.jar"
-                )
-        );
+    public List<String> getDockerFileLines() throws Exception {
+        throw new IllegalAccessException("Mongo does not have DockerFileLines");
     }
 
     @Override
@@ -52,13 +39,10 @@ public class JavaGenerator extends TemplateContentGenerator {
         return new ArrayList<>(
                 Arrays.asList(
                         FileUtil.TABULATION + "SERVICE_NAME:",
-                        FileUtil.DOUBLE_TABULATION + "build:",
-                        FileUtil.TRI_TABULATION + "dockerfile: ./FILE_NAME",
-                        FileUtil.TRI_TABULATION + "context: .",
                         FileUtil.DOUBLE_TABULATION + "image: IMAGE_NAME",
                         FileUtil.DOUBLE_TABULATION + "container_name: SERVICE_NAME-1",
                         FileUtil.DOUBLE_TABULATION + "ports:",
-                        FileUtil.TRI_TABULATION + "- \"8080:8080\""
+                        FileUtil.TRI_TABULATION + "- \"27017:27017\""
                 )
         );
     }

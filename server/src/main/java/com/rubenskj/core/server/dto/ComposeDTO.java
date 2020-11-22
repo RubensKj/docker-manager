@@ -37,4 +37,12 @@ public class ComposeDTO {
     public void setImages(List<String> images) {
         this.images = images;
     }
+
+    @Override
+    public String toString() {
+        return "ComposeDTO{" +
+                "fileName='" + fileName + '\'' +
+                ", images=" + images +
+                '}';
+    }
 }
