@@ -1,4 +1,4 @@
-import React, { TextareaHTMLAttributes, useRef } from 'react';
+import React, { useRef } from 'react';
 
 // Interface
 import { IModalProps } from '../ModalInterface';
@@ -16,9 +16,10 @@ interface IModalImageProps extends IModalProps {
 
 export interface Image {
   id: number;
-  filename: string;
-  imageName: string;
-  content: string;
+  fileName: string;
+  name: string;
+  contentDockerFile: string;
+  contentDockerCompose: string;
   type: string;
 }
 
@@ -38,11 +39,11 @@ const ModalImage: React.FC<IModalImageProps> = ({ isOpen, setIsOpen, image }) =>
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} width="768px">
       <Container>
-        <h2>{image.imageName && image.imageName.toUpperCase()}</h2>
+        <h2>{image.name && image.name.toUpperCase()}</h2>
         <h4>Image type: {image.type}</h4>
-        <p>{image.filename}</p>
+        <p>{image.fileName}</p>
         <LineSeparator />
-        <Content ref={ref}>{image.content}</Content>
+        <Content ref={ref} defaultValue={image.contentDockerFile}></Content>
         <button onClick={copyToClipBoard}>Copy to the clipboard</button>
       </Container>
     </Modal>

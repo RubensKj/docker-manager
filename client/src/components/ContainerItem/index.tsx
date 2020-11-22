@@ -15,9 +15,9 @@ interface ContainerProps {
 const ContainerItem: React.FC<ContainerProps> = ({ icon, image, onClick }) => {
   return (
     <Container onClick={() => onClick(image)}>
-      <img srcSet={icon} alt={image.imageName} />
+      <img srcSet={icon} alt={image.name} />
       <Content>
-        <h2>{image.imageName}</h2>
+        <h2>{image.name}</h2>
         <p>type: {image.type}</p>
       </Content>
     </Container>

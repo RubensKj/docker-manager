@@ -9,6 +9,9 @@ import LogoContainer from '../../assets/Logo/docker_file.png';
 // Components
 import ContainerItem from '../../components/ContainerItem';
 
+// Service
+import api from '../../services/api';
+
 // Styles
 import { Container, Header, List } from './styles';
 
@@ -19,31 +22,11 @@ const Dockerfiles: React.FC = () => {
   const [selectedImage, setSelectedImage] = useState<Image>({} as Image);
 
   useEffect(() => {
-    const response = [
-      {
-        id: 1,
-        filename: 'emissao-rda.dockerfile',
-        imageName: 'emissao-rda',
-        content: 'version: 3.8',
-        type: 'JAVA',
-      },
-      {
-        id: 2,
-        filename: 'recebimento-rda.dockerfile',
-        imageName: 'recebimento-rda',
-        content: 'version: 3.8',
-        type: 'JAVA',
-      },
-      {
-        id: 3,
-        filename: 'eureka-rda.dockerfile',
-        imageName: 'eureka-rda',
-        content: 'version: 3.8\nFROM node:latest\nMAINTAINER RubensKj\nENV NODE_ENV=development\nCOPY . /var/www\nWORKDIR /var/www\nRUN npm install \nENTRYPOINT ["npm", "start"]\nEXPOSE 3000',
-        type: 'JAVA',
-      }
-    ]
+    api.get('/image').then(response => {
+      console.log(response)
+      setImages(response.data);
+    });
 
-    setImages(response);
   }, []);
 
   function toggleImageModal(image: Image): void {
