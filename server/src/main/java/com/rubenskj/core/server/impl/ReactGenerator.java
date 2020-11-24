@@ -12,13 +12,13 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class JavaGenerator extends TemplateContentGenerator {
+public class ReactGenerator extends TemplateContentGenerator {
 
-    private final DockerFileService dockerfileService;
+    private final DockerFileService dockerFileService;
 
-    public JavaGenerator(@Qualifier("reactGenerator") TemplateContentGenerator iContentGenerator, DockerFileService dockerfileService) {
-        super(iContentGenerator, Type.JAVA);
-        this.dockerfileService = dockerfileService;
+    public ReactGenerator(@Qualifier("mongoGenerator") TemplateContentGenerator iContentGenerator, DockerFileService dockerFileService) {
+        super(iContentGenerator, Type.REACT);
+        this.dockerFileService = dockerFileService;
     }
 
     @Override
@@ -26,30 +26,31 @@ public class JavaGenerator extends TemplateContentGenerator {
         List<String> defaultLinesDocker = getDockerFileLines();
         List<String> defaultComposeLines = getDockerComposeLines();
 
-        List<String> dockerFileLines = this.dockerfileService.createDockerFile(image, image.getType(), defaultLinesDocker);
-        List<String> dockerComposeLines = this.dockerfileService.createDockerComposeFromImage(image, image.getType(), defaultComposeLines);
+        List<String> dockerFileLines = this.dockerFileService.createDockerFile(image, image.getType(), defaultLinesDocker);
+        List<String> dockerComposeLines = this.dockerFileService.createDockerComposeFromImage(image, image.getType(), defaultComposeLines);
 
         image.setContentDockerFile(String.join("\n", dockerFileLines));
         image.setContentDockerCompose(String.join("\n", dockerComposeLines));
     }
 
     @Override
-    public List<String> getDockerFileLines() {
+    public List<String> getDockerFileLines() throws Exception {
         return new ArrayList<>(
                 Arrays.asList(
-                        "FROM openjdk:latest",
+                        "FROM nginx:latest",
                         "MAINTAINER AUTHOR_NAME",
-                        "COPY . /var/www/APPLICATION_FILE.yml",
-                        "COPY ./target/*.jar /var/www/JAR_NAME.jar",
-                        "WORKDIR /var/www/",
-                        "EXPOSE 8080",
-                        "ENTRYPOINT java -jar JAR_NAME.jar"
+                        "COPY ./build /var/www/public",
+                        "COPY ./nginx.conf /etc/nginx/nginx.conf",
+                        "RUN chmod 755 -R /var/www/public",
+                        "EXPOSE 80 443",
+                        "ENTRYPOINT nginx",
+                        "CMD [\"-g\", \"daemon off;\"]"
                 )
         );
     }
 
     @Override
-    public List<String> getDockerComposeLines() {
+    public List<String> getDockerComposeLines() throws Exception {
         return new ArrayList<>(
                 Arrays.asList(
                         FileUtil.TABULATION + "SERVICE_NAME:",
@@ -59,7 +60,7 @@ public class JavaGenerator extends TemplateContentGenerator {
                         FileUtil.DOUBLE_TABULATION + "image: IMAGE_NAME",
                         FileUtil.DOUBLE_TABULATION + "container_name: SERVICE_NAME-1",
                         FileUtil.DOUBLE_TABULATION + "ports:",
-                        FileUtil.TRI_TABULATION + "- \"8080:8080\""
+                        FileUtil.TRI_TABULATION + "- \"80:80\""
                 )
         );
     }

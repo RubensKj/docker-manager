@@ -1,0 +1,6 @@
+# MongoDB Configuration
+spring:
+  data:
+    mongodb:
+      uri: mongodb://mongo-1:27017/?retryWrites=true&w=majority
+      database: docker_manager

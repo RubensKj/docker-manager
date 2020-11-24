@@ -1,0 +1,49 @@
+version: '3.8'
+services:
+  # mongo:
+  #   image: mongo
+  #   container_name: mongo-1
+  #   ports:
+  #     - "27017:27017"
+  #   networks: 
+  #     - production-network
+  server:
+    build:
+      dockerfile: ./docker/server.dockerfile
+      context: .
+    image: rubenskj/server
+    container_name: java-api-1
+    ports:
+      - "8080:8080"
+    networks: 
+      - production-network
+    # depends_on: 
+    #   - "mongo"
+  client:
+    build:
+      dockerfile: ./docker/client.dockerfile
+      context: .
+    image: rubenskj/client
+    container_name: client-1
+    ports:
+      - "3000:3000"
+    networks: 
+      - production-network
+    depends_on: 
+      - "server"
+  nginx:
+    build:
+      dockerfile: ./docker/nginx.dockerfile
+      context: .
+    image: rubenskj/nginx
+    container_name: nginx-1
+    ports:
+      - "80:80"
+    networks: 
+      - production-network
+    depends_on: 
+      - "client"
+      - "server"
+networks:
+  production-network:
+    driver: bridge

@@ -13,6 +13,14 @@ services:
     container_name: server-1
     ports:
       - "8080:8080"
+  client:
+    build:
+      dockerfile: ./client.dockerfile
+      context: .
+    image: rubenskj/client
+    container_name: client-1
+    ports:
+      - "80:80"
 networks:
   production-network:
     driver: bridge"
