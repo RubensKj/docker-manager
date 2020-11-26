@@ -19,18 +19,6 @@ services:
       - production-network
     depends_on: 
       - "mongo"
-  client:
-    build:
-      dockerfile: ./docker/client.dockerfile
-      context: .
-    image: rubenskj/client
-    container_name: client-1
-    ports:
-      - "3000:3000"
-    networks: 
-      - production-network
-    depends_on: 
-      - "server"
   nginx:
     build:
       dockerfile: ./docker/nginx.dockerfile
@@ -42,7 +30,6 @@ services:
     networks: 
       - production-network
     depends_on: 
-      - "client"
       - "server"
 networks:
   production-network:

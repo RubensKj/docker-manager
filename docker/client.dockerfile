@@ -1,7 +1,7 @@
-FROM node:latest
+FROM node:latest as build
 LABEL rubenskj client
-COPY /client/build /var/www
-WORKDIR /var/www
-RUN npm install serve
-ENTRYPOINT ["serve", "./build"]
-EXPOSE 3000
+WORKDIR /usr/src/app
+COPY /client/package.json yarn.lock ./
+RUN yarn
+COPY /client/ ./
+RUN yarn build
