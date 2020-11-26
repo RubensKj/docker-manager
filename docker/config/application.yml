@@ -4,3 +4,8 @@ spring:
     mongodb:
       uri: mongodb://mongo-1:27017/?retryWrites=true&w=majority
       database: docker_manager
+
+server:
+  context-path: /api
+  servlet:
+    context-path: /api

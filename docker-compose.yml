@@ -1,12 +1,12 @@
 version: '3.8'
 services:
-  # mongo:
-  #   image: mongo
-  #   container_name: mongo-1
-  #   ports:
-  #     - "27017:27017"
-  #   networks: 
-  #     - production-network
+  mongo:
+    image: mongo
+    container_name: mongo-1
+    ports:
+      - "27017:27017"
+    networks: 
+      - production-network
   server:
     build:
       dockerfile: ./docker/server.dockerfile
@@ -17,8 +17,8 @@ services:
       - "8080:8080"
     networks: 
       - production-network
-    # depends_on: 
-    #   - "mongo"
+    depends_on: 
+      - "mongo"
   client:
     build:
       dockerfile: ./docker/client.dockerfile
