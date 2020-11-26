@@ -1,5 +1,5 @@
 FROM nginx:latest
-MAINTAINER rubenskj/client
+LABEL rubenskj nginx
 # COPY /client/build/. /var/www/public
 COPY /docker/config/nginx.conf /etc/nginx/nginx.conf
 # RUN chmod 755 -R /var/www/public

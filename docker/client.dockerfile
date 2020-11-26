@@ -1,5 +1,5 @@
 FROM node:latest
-MAINTAINER RubensKj
+LABEL rubenskj client
 COPY /client/build /var/www
 WORKDIR /var/www
 RUN npm install serve

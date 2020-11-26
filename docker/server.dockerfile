@@ -1,5 +1,5 @@
 FROM openjdk:latest
-MAINTAINER rubenskj/server
+LABEL rubenskj server
 COPY /docker/config/application.yml /var/www/application.yml
 COPY /server/target/*.jar /var/www/application.jar
 WORKDIR /var/www/
